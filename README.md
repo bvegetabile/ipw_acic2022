@@ -34,5 +34,5 @@ Approximate Schedule
   * `library(survey)` - Survey package for weighted outcome estimation with correct standard errors
   * `library(cobalt)` - [Covariate Balance Tables and Plots](https://ngreifer.github.io/cobalt/articles/cobalt.html)
   * `library(viridis)` - Useful Color Palette
-  
+  * `library(OVtool)` - Sensitivity Analysis for `twang`  
 
