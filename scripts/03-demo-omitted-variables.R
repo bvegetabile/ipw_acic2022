@@ -49,12 +49,12 @@ if(demo){
   AOD$atm <- ifelse(AOD$treat == 'metcbt5', 1, 0)
   aod_frmla <- atm ~ illact + crimjust + subprob + subdep + white
   aod_frmla2 <- atm ~ (illact + crimjust + subprob + subdep + white)^2
+  
+  
   bal_vars=c('illact', 'crimjust', 'subprob', 'subdep', 'white')
   AOD$sfs8p12 <- AOD$suf12
+  outcome_form <- sfs8p12 ~ atm + illact + crimjust + subprob + subdep + white
 }
-
-
-
 
 ## fit gbm and extract propensity score weights
 ps.atm <- ps(aod_frmla, data=AOD, 
@@ -90,10 +90,11 @@ ovmod <- outcome_model(ps_object = ps.atm,
               model_covariates = bal_vars,
               estimand = "ATT")
 saveRDS(ovmod, 'models/sensitivity_outcomemodel.rds')
+ovmod <- readRDS('models/sensitivity_outcomemodel.rds')
 
 sens <- ov_sim(ovmod, plot_covariates = bal_vars)
 saveRDS(sens, 'models/sensitivity_sensitivity_output.rds')
-
+sens <- readRDS('models/sensitivity_sensitivity_output.rds')
 
 plot.ov(sens, print_graphic = 3, col = 'color')
 

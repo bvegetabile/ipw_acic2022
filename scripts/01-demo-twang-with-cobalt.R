@@ -101,3 +101,4 @@ cobalt::love.plot(aod_frmla, data=AOD, weights = AOD$w,
                   colors = c("red", "blue"))
 
 # ------------------------------------------------------------------------------
+

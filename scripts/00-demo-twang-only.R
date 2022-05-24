@@ -35,12 +35,8 @@ if(demo){
   # change race to a factor
   AOD$race4g = as.factor(AOD$race4g)
   
-  aod_frmla <- atm ~ age + female + race4g + sfs + sps +
-    sds + ias + ces + eps + imds + bcs +
-    prmhtx 
-  aod_frmla <- (atm ~ age + female + race4g + sfs + sps +
-                  sds + ias + ces + eps + imds + bcs +
-                  prmhtx)^2
+  aod_frmla <- atm ~ age + female + race4g + sfs + sps + sds + ias + ces + eps + imds + bcs + prmhtx 
+  aod_frmla2 <- atm ~ (age + female + race4g + sfs + sps + sds + ias + ces + eps + imds + bcs + prmhtx)^2
   
   bal_vars=c("age","female","race4g","sfs","sps","sds","ias","ces","eps","imds","bcs","prmhtx")
 } else {
@@ -55,7 +51,8 @@ if(demo){
 
 
 ## fit gbm and extract propensity score weights
-ps.atm <- ps(aod_frmla, data=AOD, 
+ps.atm <- ps(aod_frmla, 
+             data=AOD, 
              estimand="ATT",
              n.trees=10000,
              shrinkage = 0.001,
@@ -78,6 +75,8 @@ round(summary(ps.atm), 4)
 if(demo){
   plot(ps.atm$gbm.obj, i.var="ias",
        n.trees=ps.atm$desc$es.max.ATT$n.trees)
+  # plot(ps.atm$gbm.obj, i.var="ias",
+  #      n.trees=10000)
 } else{
   plot(ps.atm$gbm.obj, i.var="crimjust",
        n.trees=ps.atm$desc$es.max.ATT$n.trees)
@@ -99,7 +98,8 @@ do.call(cbind,lapply(bal.table(ps.atm) , function(x) x[,"std.eff.sz",drop=F] ))
 plot(ps.atm, plots = 2) 
 
 # Let's also plot weights by propensity scores 
-plot(unlist(ps.atm$ps), unlist(ps.atm$w), pch = 19, col = rgb(0,0,0,0.5))
+plot(unlist(ps.atm$ps), 
+     unlist(ps.atm$w), pch = 19, col = rgb(0,0,0,0.5))
 
 # standardized effect size before and after weighting
 plot(ps.atm, plots = 3) 
